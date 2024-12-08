@@ -32,7 +32,6 @@ const CreateEventForm = () => {
       );
 
       // Redirect or show success message
-      console.log(token);
       navigate('/events/'); // Navigate back to events list
     } catch (error) {
       console.error("Error creating event:", error);
