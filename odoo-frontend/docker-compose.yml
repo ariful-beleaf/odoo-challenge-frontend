@@ -1,0 +1,14 @@
+version: "3"
+services:
+  react-app:
+    build: .
+    ports:
+      - "5173:5173"  # Vite default port
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:8069  # Your Odoo backend URL
+    volumes:
+      - .:/app  # Mount current directory to /app in container
+      - /app/node_modules  # Keep node_modules in container
+    stdin_open: true  # Docker equivalent of -i
+    tty: true        # Docker equivalent of -t
