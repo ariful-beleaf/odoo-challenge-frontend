@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 interface Event {
   id: number;
   name: string;
@@ -50,7 +52,7 @@ const EventsList = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.delete(
-        `http://localhost:8069/api/events/${id}`,
+        `${API_BASE_URL}/api/events/${id}`,
         {
           headers: { 
             "Content-Type": "application/json",
@@ -88,7 +90,7 @@ const EventsList = () => {
       console.log(token);
       try{
         const response = await axios.get(
-          "http://127.0.0.1:8069/api/events",
+          `${API_BASE_URL}/api/events`,
           {
             headers: { 
               "Content-Type": "application/json" ,
@@ -140,6 +142,7 @@ const EventsList = () => {
       <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-4">
           <h1 className="text-2xl font-bold">Events</h1>
+          <p>List of events - <a href="/events/create" className="text-blue-600">Create</a></p>
         </div>
         <div className="flex items-center gap-2">
           <span>Show</span>

@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 interface Credentials {
   login: string;
   password: string;
@@ -10,6 +12,20 @@ interface Credentials {
 interface ApiError {
   message: string;
   data?: {
+    error?: string;
+  };
+  result?: {
+    error?: string;
+  };
+}
+
+interface ApiResponse {
+  result: {
+    data: {
+      token: string;
+      error?: string;
+    };
+    message?: string;
     error?: string;
   };
 }
@@ -29,8 +45,8 @@ const LoginForm: React.FC = () => {
 
 
     try {
-      const response = await axios.post<{ token: string }>(
-        "http://localhost:8069/api/signin",
+      const response = await axios.post<{token: any; result: any; ApiResponse: any}>(
+        `${API_BASE_URL}/api/signin`,
         credentials
       );
       console.log(response);

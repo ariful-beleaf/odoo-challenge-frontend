@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+
 interface Event {
   id: number;
   name: string;
@@ -42,12 +45,11 @@ const EditEventForm: React.FC<EditEventFormProps> = ({ event, onClose, onSubmit 
         console.log('id', id);
 
         const response = await axios.get(
-          `http://127.0.0.1:8069/api/events/${id}`,
+          `${API_BASE_URL}/api/events/${id}`,
           {
             headers: { 
               "Content-Type": "application/json" ,
               "Authorization" : `Bearer ${token}`,
-              // "Access-Control-Allow-Origin":"*",
             },
           }
         );
@@ -79,10 +81,13 @@ const EditEventForm: React.FC<EditEventFormProps> = ({ event, onClose, onSubmit 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+    console.log('token:', token);
     console.log('ID from URL:', id);
+    console.log('formData:', formData);
+    debugger
     try {
       await axios.put(
-        `http://localhost:8069/api/events/${id}`,
+        `${API_BASE_URL}/api/events/${id}`,
         formData,
         {
           headers: { 
@@ -95,6 +100,7 @@ const EditEventForm: React.FC<EditEventFormProps> = ({ event, onClose, onSubmit 
       onClose();
     } catch (error) {
       console.error("Error updating event:", error);
+      alert(error)
     }
   };
 
@@ -110,7 +116,11 @@ const EditEventForm: React.FC<EditEventFormProps> = ({ event, onClose, onSubmit 
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg w-96">
         <h2 className="text-xl mb-4">Edit Event</h2>
-        <p className="text-xl">Edit an event - <button onClick={handleBack}>Back</button></p>
+        <p className="text-xl">Edit an event - 
+          <a href="/events" className="text-blue-600">
+              Back
+          </a>
+        </p>
         <form onSubmit={handleSubmit} className="space-y-4">
         <input
           className="event_id"

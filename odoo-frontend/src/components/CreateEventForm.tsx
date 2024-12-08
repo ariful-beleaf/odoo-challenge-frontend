@@ -3,6 +3,8 @@ import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { convertLocalToUTC } from "./convertLocalToUTC";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const CreateEventForm = () => {
   const navigate = useNavigate();
   const [eventData, setEventData] = useState({
@@ -22,7 +24,7 @@ const CreateEventForm = () => {
       console.log(eventData.date);
 
       const response = await axios.post(
-        "http://localhost:8069/api/events",
+        `${API_BASE_URL}/api/events`,
         eventData,
         {
           headers: { "Content-Type": "application/json" },
@@ -59,6 +61,7 @@ const CreateEventForm = () => {
               setEventData({ ...eventData, name: e.target.value })
             }
             className="w-full border rounded p-2"
+            required
           />
         </div>
 
@@ -72,6 +75,7 @@ const CreateEventForm = () => {
                 setEventData({ ...eventData, location: e.target.value })
               }
               className="w-full border rounded p-2"
+              required
             />
           </div>
 
@@ -84,6 +88,7 @@ const CreateEventForm = () => {
                 setEventData({ ...eventData, date: e.target.value })
               }
               className="w-full border rounded p-2"
+              required
             />
           </div>
         </div>
