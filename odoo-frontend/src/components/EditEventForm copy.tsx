@@ -12,27 +12,27 @@ interface Event {
   date: string;
 }
 
-// interface EditEventFormProps {
-//   event: Event | null;
-//   onClose: () => void;
-//   onSubmit: (event: Event) => void;
-// }
+interface EditEventFormProps {
+  event: Event | null;
+  onClose: () => void;
+  onSubmit: (event: Event) => void;
+}
 
-const EditEventForm: React.FC = () => {
-// const EditEventForm: React.FC<EditEventFormProps> = ({ event, onClose, onSubmit }) => {
+
+const EditEventForm: React.FC<EditEventFormProps> = ({ event, onClose, onSubmit }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>('');
   
-
-  // Initialize formData with proper typing
-  const [formData, setFormData] = useState<Event>({
-    id: 0,
-    name: '',
-    location: '',
-    date: '',
-  });
+  const [formData, setFormData] = useState(
+    event || {
+      id: 0,
+      name: '',
+      location: '',
+      date: '',
+    }
+  );
 
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const EditEventForm: React.FC = () => {
             },
           }
         );
-        console.log(response);
+        console.error(response);
         const eventData = response.data;
         const formattedDate = new Date(eventData.date)
           .toISOString()
@@ -84,7 +84,7 @@ const EditEventForm: React.FC = () => {
     console.log('token:', token);
     console.log('ID from URL:', id);
     console.log('formData:', formData);
-
+    debugger
     try {
       await axios.put(
         `${API_BASE_URL}/api/events/${id}`,
@@ -96,23 +96,13 @@ const EditEventForm: React.FC = () => {
           }
         }
       );
-      // Navigate back to events list after successful update
-      navigate('/events');
-      // onSubmit(formData);
-      // onClose();
+      onSubmit(formData);
+      onClose();
     } catch (error) {
       console.error("Error updating event:", error);
       alert(error)
     }
   };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   const handleClose = () => {
     navigate('/events/'); // Navigate back to events list
