@@ -12,18 +12,13 @@ interface Event {
   date: string;
 }
 
-// interface EditEventFormProps {
-//   event: Event | null;
-//   onClose: () => void;
-//   onSubmit: (event: Event) => void;
-// }
 
 const EditEventForm: React.FC = () => {
-// const EditEventForm: React.FC<EditEventFormProps> = ({ event, onClose, onSubmit }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
   
 
   // Initialize formData with proper typing
@@ -86,23 +81,30 @@ const EditEventForm: React.FC = () => {
     console.log('formData:', formData);
 
     try {
-      await axios.put(
+      const token = localStorage.getItem("token");
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      const response = await axios.post(
         `${API_BASE_URL}/api/events/${id}`,
         formData,
         {
-          headers: { 
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
+          headers: { "Content-Type": "application/json" },
         }
       );
-      // Navigate back to events list after successful update
+
+      console.log('response:', response);
       navigate('/events');
-      // onSubmit(formData);
-      // onClose();
-    } catch (error) {
+      setSuccess('Event Update Successful')
+    } catch (error: any) {
       console.error("Error updating event:", error);
-      alert(error)
+      // Improve error handling
+      if (error.response) {
+          alert(`Error: ${error.response.data.error || 'Failed to update event'}`);
+      } else if (error.request) {
+          alert('Network error. Please check your connection.');
+      } else {
+          alert('An error occurred. Please try again.');
+      }
     }
   };
 
@@ -113,6 +115,10 @@ const EditEventForm: React.FC = () => {
   if (error) {
     return <div>Error: {error}</div>;
   }
+
+  // if (success) {
+  //   return <div>Event Update Successful: {formData.name}</div>;
+  // }
 
   const handleClose = () => {
     navigate('/events/'); // Navigate back to events list
