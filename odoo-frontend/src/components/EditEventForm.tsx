@@ -75,11 +75,6 @@ const EditEventForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-    console.log('token:', token);
-    console.log('ID from URL:', id);
-    console.log('formData:', formData);
-
     try {
       const token = localStorage.getItem("token");
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
